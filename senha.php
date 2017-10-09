@@ -2,7 +2,6 @@
 //ini_set('display_errors', 1);
 //ini_set('display_startup_erros',1);
 //error_reporting(E_ALL);
-//teste
 
 require_once "lib/adianti/database/TRecord.php";
 require_once "lib/adianti/database/TTransaction.php";
