@@ -63,32 +63,7 @@ if( TSession::getValue('logged') ) {
      if (($_SERVER ['REQUEST_URI'] == "/novo_assema/index.php?modulo=" . filter_input(INPUT_GET, 'modulo')) || ($_SERVER ['REQUEST_URI'] == "/novo_assema/index.php" )) {
         $mural = Adianti\Widget\Menu\TMenu::montaMural();
     }
-/*$mural = '
-    <div class="col-lg-4 col-md-4">
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-xs-3">
-                            <i class="fa fa-comments fa-5x"></i>
-                        </div>
-                        <div class="col-xs-9 text-right">
-                            <div class="huge"></div>
-                            <div>Total de usuarios</div>
-                        </div>
-                    </div>
-                </div>
-                <a href="index.php?class=PacienteList">
-                    <div class="panel-footer">
-                        <span class="pull-left">View Details</span>
-                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                        <div class="clearfix"></div>
-                    </div>
-                </a>
-            </div>
-        </div>';*/
 
-    // carregar municipio e usuario
-    // inicia transacao com o banco 'pg_ceres'
     TTransaction::open('pg_ceres');
 
     if ($_SESSION ['empresa_id']) {
@@ -111,29 +86,7 @@ if( TSession::getValue('logged') ) {
             }
         }
     }
-/* temporariamente fechado
-    if ($_SESSION ['municipio_id']) {
-        // instancia um record da classe municipio
-        $repository = new TRepository('MunicipioRecord');
-        $criteria = new TCriteria ();
-        $criteria->setProperty('order', 'municipio');
-        $criteria->add(new TFilter('id', '=', $_SESSION ["municipio_id"]));
-        //$criteria->add ( new TFilter ( 'servidor_id', '=', $_SESSION ["servidor_id"] ) );
-        // carrega os objetos de acordo com o criterio
-        $cadastros = $repository->load($criteria);
 
-        // armazena o municipio do usuario
-        if ($cadastros) {
-            // $municipio = $municipiorecord->municipio;
-            foreach ($cadastros as $object) {
-                $municipiologado .= '<option ';
-                if ($_SESSION ['municipio_id'] == $object->municipio_id)
-                    $municipiologado .= ' selected ';
-                $municipiologado .= 'value="?lotacao=' . $object->municipio_id . '" >' . $object->municipio . '</option>';
-            }
-        }
-    }
-*/
     $lotacao = filter_input(INPUT_GET, 'lotacao');
     if ($lotacao) {
         $_SESSION ['municipio_id'] = $lotacao;
