@@ -78,6 +78,7 @@ class SocioList extends TPage
         $action_edit->setLabel(_t('Edit'));
         $action_edit->setImage('fa:pencil-square-o blue fa-lg');
         $action_edit->setField('id');
+        $action_edit->setFk('id');
         $this->datagrid->addAction($action_edit);
         
         // create DELETE action
@@ -110,8 +111,8 @@ class SocioList extends TPage
         $action_group->addHeader('Visualização');
         //$action_group->addAction($action3);
         
-        // add the actions to the datagrid
-        $this->datagrid->addActionGroup($action_group);
+        // adiciona o grupo action
+        //$this->datagrid->addActionGroup($action_group);
 
         $this->datagrid->createModel();
 

@@ -76,7 +76,12 @@ class DependenteDetalhe extends TPage {
 
     $this->form->addAction( 'Salvar',$action1, 'ico_save.png' );
     //$this->form->addAction( 'Voltar',$action_voltar, 'back_blue_arrow.png');
-    $this->form->addAction('Voltar', new TAction(array('SocioList', 'onReload')), 'back_blue_arrow.png');
+    
+    $action2 = new TAction(array("SocioForm", 'onEdit'));
+    $action2->setParameter('fk', filter_input(INPUT_GET, 'fk'));
+
+    $this->form->addAction('Voltar', $action2, 'back_blue_arrow.png');
+    //$this->form->addAction('Voltar', new TAction(array('SocioList', 'onReload')), 'back_blue_arrow.png');
 
     $this->datagrid = new BootstrapDatagridWrapper(new TDataGrid);
     $this->datagrid->style = 'width: 100%';

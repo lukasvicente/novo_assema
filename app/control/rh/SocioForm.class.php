@@ -13,11 +13,11 @@ class SocioForm extends TPage
 {
 
     private $form;     // formulario de cadastro
-
+    
     public function __construct() {
 		
         parent::__construct();
-
+        
         $this->form = new BootstrapFormBuilder('form_socio');
         $this->form->setFormTitle('Formulario de Sócio');
         
@@ -119,26 +119,33 @@ class SocioForm extends TPage
         $cpf->setSize('53%'); 
         $dtnascimento->setSize('40%');
 
-        if ($_GET['key'] != null) {
+        if (!empty($_GET['fk'])) {
         	 
         
         $frame2 = new TFrame;
         $frame2->setLegend( "Ações para o Socio" );
         $frame2->style .= ';margin:0%;width:90%';
 
-        $add_button2 = TButton::create("buttona", [ $this,"onEdit" ], null, null);
-        $onSaveFrame2 = new TAction( [ 'DependenteDetail', "onReload" ] );
-        $onSaveFrame2->setParameter( "fk", $fk );
-        $onSaveFrame2->setParameter( "did", $did );
-        $onSaveFrame2->setParameter( "frm", 1 );
+        $add_button2 = TButton::create("buttondependente", [ $this,"onEdit" ], null, null);
+            $onSaveFrame2 = new TAction(array('DependenteDetalhe', 'onReload'));
+            $onSaveFrame2->setParameter('fk', '' . filter_input(INPUT_GET, 'fk') . '');
         $add_button2->setAction( $onSaveFrame2 );
 
+        $add_button3 = TButton::create("buttonplanosaude", [ $this,"onEdit" ], null, null);
+            $onSaveFrame3 = new TAction(array('SocioPlanoSaudeDetalhe', 'onReload'));
+            $onSaveFrame3->setParameter('fk', '' . filter_input(INPUT_GET, 'fk') . '');
+        $add_button3->setAction( $onSaveFrame3 );
 
         $this->form->addField( $add_button2 );
+        $this->form->addField( $add_button3 );
 
         $add_button2->setLabel( "Dependente" );
         $add_button2->class = 'btn btn-success';
         $add_button2->setImage( "fa:plus white" );
+
+        $add_button3->setLabel( "Plano Saúde" );
+        $add_button3->class = 'btn btn-success';
+        $add_button3->setImage( "fa:plus white" );
 
         $this->form->addContent( [ $frame2 ] );
         $hbox2 = new THBox;
@@ -366,10 +373,10 @@ class SocioForm extends TPage
 		try 
 		{
 			
-            if( isset( $param['key'] ) ) 
+            if( isset( $param['fk'] ) ) 
 			{
  
-                $key = $param['key'];
+                $key = $param['fk'];
 
                 TTransaction::open('pg_ceres');  
 

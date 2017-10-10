@@ -61,18 +61,14 @@ class SocioPlanoSaudeDetalhe extends TPage {
  
     $this->form->addFields( [ new TLabel('') ],[ $codigo,$titulo,$socio_id ] );
 
-    TTransaction::open('pg_ceres');
-        $action_voltar = new \Adianti\Control\TAction(array('SocioList', 'onSearch'));
-        $action_voltar->setParameter('nome', (new SocioRecord(filter_input(INPUT_GET, 'fk')))->nome);
-    TTransaction::close(); 
-    //var_dump($action_voltar);exit();
-
     $action1 = new TAction(array($this, 'onSave'));
     $action1->setParameter('fk', '' . filter_input(INPUT_GET, 'fk') . '');
 
     $this->form->addAction( 'Salvar',$action1, 'ico_save.png' );
-    //$this->form->addAction( 'Voltar',$action_voltar, 'back_blue_arrow.png');
-    $this->form->addAction('Voltar', new TAction(array('SocioList', 'onReload')), 'back_blue_arrow.png');
+    
+    $action2 = new TAction(array("SocioForm", 'onEdit'));
+    $action2->setParameter('fk', filter_input(INPUT_GET, 'fk'));
+    $this->form->addAction('Voltar', $action2, 'back_blue_arrow.png');
 
     $this->datagrid = new BootstrapDatagridWrapper(new TDataGrid);
     $this->datagrid->style = 'width: 100%';
