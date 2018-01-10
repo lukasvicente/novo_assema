@@ -13,11 +13,13 @@ class SocioForm extends TPage
 {
 
     private $form;     // formulario de cadastro
-    
+    private $form1; 
+
     public function __construct() {
 		
         parent::__construct();
         
+
         $this->form = new BootstrapFormBuilder('form_socio');
         $this->form->setFormTitle('Formulario de Sócio');
         
@@ -119,45 +121,6 @@ class SocioForm extends TPage
         $cpf->setSize('53%'); 
         $dtnascimento->setSize('40%');
 
-        if (!empty($_GET['fk'])) {
-        	 
-        
-        $frame2 = new TFrame;
-        $frame2->setLegend( "Ações para o Socio" );
-        $frame2->style .= ';margin:0%;width:90%';
-
-        $add_button2 = TButton::create("buttondependente", [ $this,"onEdit" ], null, null);
-            $onSaveFrame2 = new TAction(array('DependenteDetalhe', 'onReload'));
-            $onSaveFrame2->setParameter('fk', '' . filter_input(INPUT_GET, 'fk') . '');
-        $add_button2->setAction( $onSaveFrame2 );
-
-        $add_button3 = TButton::create("buttonplanosaude", [ $this,"onEdit" ], null, null);
-            $onSaveFrame3 = new TAction(array('SocioPlanoSaudeDetalhe', 'onReload'));
-            $onSaveFrame3->setParameter('fk', '' . filter_input(INPUT_GET, 'fk') . '');
-        $add_button3->setAction( $onSaveFrame3 );
-
-        $this->form->addField( $add_button2 );
-        $this->form->addField( $add_button3 );
-
-        $add_button2->setLabel( "Dependente" );
-        $add_button2->class = 'btn btn-success';
-        $add_button2->setImage( "fa:plus white" );
-
-        $add_button3->setLabel( "Plano Saúde" );
-        $add_button3->class = 'btn btn-success';
-        $add_button3->setImage( "fa:plus white" );
-
-        $this->form->addContent( [ $frame2 ] );
-        $hbox2 = new THBox;
-        $hbox2->add( $add_button2 );
-        $hbox2->add( $add_button3 );
-        $hbox2->add( $add_button4 );
-        $hbox2->style = 'margin: 0%';
-        $vbox2 = new TVBox;
-        $vbox2->style='width:100%';
-        $vbox2->add( $hbox2 );
-        $frame2->add( $vbox2 );
-}
 
         $this->form->appendPage('Endereço');
 
@@ -198,13 +161,36 @@ class SocioForm extends TPage
 
         $this->form->addAction( 'Salvar', new TAction( array( $this, 'onSave' ) ), 'ico_save.png' );
         $this->form->addAction('Voltar', new TAction(array('SocioList', 'onLoad')), 'back_blue_arrow.png');
+       
+        if (!empty($_GET['fk'])) {   
+            
+        $this->form1 = new BootstrapFormBuilder('form_socio1');
+        $this->form1->setFormTitle('Ações para o Sócio');
 
-        // wrap the page content using vertical box
+        $buttondependente = new TAction( ['DependenteDetalhe', 'onEdit' ] );
+        $buttondependente->setParameter('fk', '' . filter_input(INPUT_GET, 'fk') . '');
+
+        $buttonplanosaude = new TAction( ['SocioPlanoSaudeDetalhe', 'onEdit' ] );
+        $buttonplanosaude->setParameter('fk', '' . filter_input(INPUT_GET, 'fk') . '');
+
+        $add_button2 = new TActionLink('Dependente', $buttondependente, 'white', 11, '', 'fa:plus white');
+        $add_button2->class='btn btn-success';
+
+        $add_button3 = new TActionLink('Plano Saude', $buttonplanosaude, 'white', 11, '', 'fa:plus white');
+        $add_button3->class='btn btn-success';
+
+        $this->form1->addFields(  [ $add_button2,$add_button3 ]  );
+        
+        }
+
         $vbox = new TVBox;
-        //$vbox->add(new TXMLBreadCrumb('menu.xml', __CLASS__));
         $vbox->add($this->form);
-
         parent::add($this->form);
+
+        $vbox1 = new TVBox;
+        $vbox1->add($this->form1);
+        parent::add($this->form1);
+        
 
     }
 
