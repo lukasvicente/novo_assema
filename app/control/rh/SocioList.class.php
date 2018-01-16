@@ -173,33 +173,40 @@ class SocioList extends TPage
 
     function onLoad() {}
  
-    function onSearch( $param)
+    function onSearch( $param )
     {
       
         TTransaction::open('pg_ceres');
         $repository = new TRepository('SocioRecord');
-        //$dataForm = $this->form->getData();
-
-            //obtem os dados do formulario de busca
-       //$dados = ($dataForm->nome != null ? $dataForm->nome : $param['nome']);
-            //
+        $limit = 10;
 
         $campo = $this->form->getFieldData('opcao');
         $dados = $this->form->getFieldData('nome');
 
         $criteria = new TCriteria;
-        $criteria->setProperty('order', 'nome');
 
-        if ($dados) {
+        if (empty($param['order']))
+            {
+                $param['order'] = 'nome';
+                $param['direction'] = 'asc';
+            }
+
+        $criteria->setProperties($param);
+        $criteria->setProperty('limit', $limit);
+            
+        if ($dados)
+         {
              if (is_numeric($dados)) {
                 $criteria->add(new TFilter($campo, '=', $dados));
             } else {
                 $criteria->add(new TFilter1('special_like(' . $campo . ",'" . $dados . "')"));
             }
         }
+
         $cadastros = $repository->load($criteria);
 
         $this->datagrid->clear();
+
         if ($cadastros)
         {
             foreach ($cadastros as $cadastro)
@@ -208,8 +215,16 @@ class SocioList extends TPage
             }
         }
         
+            $criteria->resetProperties();
+            $count= $repository->count($criteria);
+            
+            $this->pageNavigation->setCount($count); 
+            $this->pageNavigation->setProperties($param); 
+            $this->pageNavigation->setLimit($limit); 
+
         TTransaction::close();
         $this->loaded = true;
+
     }
 
     function onDelete($param)
