@@ -323,7 +323,7 @@ echo $content;
 if( $_SESSION["validacao"] === '0' && $_SESSION["usuario_id"] === '' && !TSession::getValue('logged') )
 {
 
-  new TMessage( 'error', '<font color=red><b>Usu&aacute;rio ou Senha inv&aacute;lidos.</b></font><b> Tente novamente, se o erro persisti entre em contato com a equipe de Tecnologia da Informa&ccedil;&atilde;o (TI).</b>');
+  new TMessage( 'error', '<font color=red><b>Usu&aacute;rio ou Senha inv&aacute;lidos.</b></font><b> Tente novamente, se o erro persisti entre em contato com a equipe de Tecnologia da Informa&ccedil;&atilde;o (TI).</b> </br><b> Tel.: </b>(84) 3234-9490  </br><b> E-mail:</b> ti@assemarn.com.br ');
   $_SESSION["validacao"] = '';
 
 }
