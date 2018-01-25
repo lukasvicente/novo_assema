@@ -150,7 +150,7 @@ class SocioForm extends TPage
         $this->form->addFields( [ new TLabel('Situação <font color=red><b>*</b></font>') ],[ $situacaoemater ] );
         
         $orgaorg->setSize('30%');
-        $tiposocio->setSize('25%');
+        $tiposocio->setSize('27.5%');
         $this->form->appendPage('Adicional');
         
 
@@ -335,9 +335,11 @@ class SocioForm extends TPage
             }else 
 			{
 
-                new TMessage( "info", $msg );
-				
-				TApplication::gotoPage( 'SocioList', 'onLoad' ); 
+            new TMessage( "info", $msg );
+			$param = array();
+        	$param['key'] = $cadastro->id;
+        	$param['fk'] = $cadastro->id;
+			TApplication::gotoPage( 'SocioForm', 'onEdit',$param ); 
 				
             }
 			
