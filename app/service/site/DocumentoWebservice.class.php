@@ -73,7 +73,9 @@ class DocumentoWebservice
 					$tempDocumento["arquivo"] = $object->arquivo;
 					$tempDocumento["tipo"] = $object->tipo;
 					$tempDocumento["ano"] = $object->ano;
-					$tempDocumento["mes"] = $object->mes;
+					$tempDocumento["mes"] = retornaMes($object->mes);
+					$tempDocumento["tipo_id"] = $object->tipo_id;
+					$tempDocumento["link"] = $object->link;
 
 					
 					$response[$dadosTag][$i++] = $tempDocumento; 
