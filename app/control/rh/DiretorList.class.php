@@ -1,7 +1,7 @@
 <?php
 
 /*
- * classe SocioList
+ * classe SocioListc
  * Cadastro de Socio: Contem a listagem e o formulario de busca
  */
   
