@@ -275,6 +275,16 @@ function formatar_hora2($valor) {
 //return $valor;
 }
 
+function formatar_time($valor) {
+    if ( $valor != null)
+    {
+    $hora = substr($valor, 11, 2) . "h" . substr($valor, 14, 2);
+    }
+    return $hora;
+
+}
+
+
 function GravarDataPostgres($data) {
     $tmp = str_replace("'", "''", $data);
     if ($tmp == "") {
