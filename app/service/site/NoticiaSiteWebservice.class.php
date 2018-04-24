@@ -73,6 +73,7 @@ class NoticiaSiteWebservice
 					$tempDocumento["situacao"] = $object->situacao;
 					$tempDocumento["autor"] = $object->autor;
                     $tempDocumento["hora"] = formatar_time($object->datapublicacao);
+                    $tempDocumento["tempo"] = Tempo_Post($object->datapublicacao);
 
 					$response[$dadosTag][$i++] = $tempDocumento; 
 				

@@ -1,5 +1,30 @@
 <?php
 
+
+function Tempo_Post($data) {
+
+    $diaHoje = date('d');
+    $mesHoje = date('m');
+    $anoHoje = date('Y');
+
+    $horaHoje = date('H');
+    $minHoje = date('i');
+    $segHoje = date('s');
+
+    $hora = substr($data,11,2);
+    $minutos = substr($data,14,2);
+    $segundos = substr($data,17,2);
+
+
+    if ($horaHoje > $hora) {
+
+        $retorno = "Há ".($minHoje - $minutos )*(-1)." Minutos";
+
+    }
+
+    return ($retorno);
+}
+
 #Essa funcao verifica se o valor informado para horas e valido
 #Por:  Pedro Henrique
 #Data: 21/10/2016
