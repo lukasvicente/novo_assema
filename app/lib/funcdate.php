@@ -11,16 +11,33 @@ function Tempo_Post($data) {
     $minHoje = date('i');
     $segHoje = date('s');
 
+    $ano = substr($data,0,4);
+    $mes = substr($data,5,2);
+    $dia = substr($data,8,2);
+
     $hora = substr($data,11,2);
     $minutos = substr($data,14,2);
     $segundos = substr($data,17,2);
 
-
-    if ($horaHoje > $hora) {
+    if ( $horaHoje > $hora and ($horaHoje - $hora) < 1  and ($diaHoje - $dia) < 1 ) 
+    {
 
         $retorno = "Há ".($minHoje - $minutos )*(-1)." Minutos";
 
     }
+    elseif ($horaHoje > $hora and ($horaHoje - $hora) > 1 and ($diaHoje - $dia) < 1 ) 
+    {
+
+        $retorno = " Há ".($horaHoje - $hora )." Horas";
+
+    }
+    elseif ($horaHoje > $hora and ($horaHoje - $hora) < 24 and ($diaHoje - $dia) >= 1)  
+    {
+        
+        $retorno = " Há ".($diaHoje - $dia)." dia";
+    }
+
+    $teste = $diaHoje - $dia;
 
     return ($retorno);
 }

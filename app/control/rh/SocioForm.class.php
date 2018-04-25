@@ -18,7 +18,78 @@ class SocioForm extends TPage
     public function __construct() {
 		
         parent::__construct();
+        $script = new TElement('script'); 
+$script->type = 'text/javascript';
         
+$script->add(" 
+    function limpa_formulário_cep() {
+            //Limpa valores do formulário de cep.
+            document.getElementById('rua').value=('');
+            document.getElementById('bairro').value=('');
+            document.getElementById('cidade').value=('');
+            document.getElementById('uf').value=('');
+            
+    }
+        function meu_callback(conteudo) {
+        if (!('erro' in conteudo)) {
+            //Atualiza os campos com os valores.
+            document.getElementById('rua').value=(conteudo.logradouro);
+            document.getElementById('bairro').value=(conteudo.bairro);
+            document.getElementById('cidade').value=(conteudo.localidade);
+            document.getElementById('uf').value=(conteudo.uf);
+            
+        } //end if.
+        else {
+            //CEP não Encontrado.
+            limpa_formulário_cep();
+            alert('CEP não encontrado.');
+        }
+    }
+
+    function pesquisacep(valor) {
+
+        
+        var cep = valor.replace(/\D/g, '');
+
+        //Verifica se campo cep possui valor informado.
+        if (cep != '') {
+
+            //Expressão regular para validar o CEP.
+            var validacep = /^[0-9]{8}$/;
+
+            //Valida o formato do CEP.
+            if(validacep.test(cep)) {
+
+                
+                document.getElementById('rua').value='...';
+                document.getElementById('bairro').value='...';
+                document.getElementById('cidade').value='...';
+                document.getElementById('uf').value='...';
+                //document.getElementById('ibge').value='...';
+
+                //Cria um elemento javascript.
+                var script = document.createElement('script');
+
+                //Sincroniza com o callback.
+                script.src = 'https://viacep.com.br/ws/'+ cep + '/json/?callback=meu_callback';
+
+                //Insere script no documento e carrega o conteúdo.
+                document.body.appendChild(script);
+
+            } //end if.
+            else {
+                //cep é inválido.
+                limpa_formulário_cep();
+                alert('Formato de CEP inválido.');
+            }
+        } //end if.
+        else {
+            //cep sem valor, limpa formulário.
+            limpa_formulário_cep();
+        }
+    };");
+        
+        parent::add($script); 
 
         $this->form = new BootstrapFormBuilder('form_socio');
         $this->form->setFormTitle('Formulario de Sócio');
@@ -52,6 +123,14 @@ class SocioForm extends TPage
         $fundador = new TCheckGroup('fundador');
         $situacaoemater = new TCombo('situacaoemater');
         $secretaria = new TEntry('secretaria');
+
+       
+        $cep->setProperty('onblur', 'pesquisacep(this.value);');
+        $cep->setProperty('ID', 'cep');
+        $cidade->setProperty('ID', 'cidade');
+        $endereco->setProperty('ID', 'rua');
+        $bairro->setProperty('ID', 'bairro');
+        $uf->setProperty('ID', 'uf');
  
         $observacao = new TText('observacao');
         $consultar_cep = new THyperLink('Consultar CEP', 'http://www.buscacep.correios.com.br/sistemas/buscacep/BuscaCepEndereco.cfm', 'blue', 11, 'biu');
@@ -123,12 +202,11 @@ class SocioForm extends TPage
 
 
         $this->form->appendPage('Endereço');
-
+        $this->form->addFields( [ new TLabel('CEP <font color=red><b>*</b></font>') ],[ $cep,$consultar_cep ] );
         $this->form->addFields( [ new TLabel('Endereco <font color=red><b>*</b></font>') ],[ $endereco ] );
         $this->form->addFields( [ new TLabel('complemento <font color=red><b>*</b></font>') ],[ $complemento ] );
         $this->form->addFields( [ new TLabel('Bairro <font color=red><b>*</b></font>') ],[ $bairro ] );
         $this->form->addFields( [ new TLabel('Cidade <font color=red><b>*</b></font>') ],[ $cidade ] );
-        $this->form->addFields( [ new TLabel('CEP <font color=red><b>*</b></font>') ],[ $cep,$consultar_cep ] );
         $this->form->addFields( [ new TLabel('UF <font color=red><b>*</b></font>') ],[ $uf ] );
 
         $endereco->setSize('40%');
