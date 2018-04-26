@@ -1,58 +1,48 @@
 <?php
-
-
 function Tempo_Post($data) {
-
     $diaHoje = date('d');
     $mesHoje = date('m');
     $anoHoje = date('Y');
-
     $horaHoje = date('H');
     $minHoje = date('i');
     $segHoje = date('s');
-
+ 
     $ano = substr($data,0,4);
     $mes = substr($data,5,2);
     $dia = substr($data,8,2);
-
     $hora = substr($data,11,2);
     $minutos = substr($data,14,2);
     $segundos = substr($data,17,2);
-
-    if ( $horaHoje > $hora and ($horaHoje - $hora) < 1  and ($diaHoje - $dia) < 1 ) 
-    { 
-
-        $retorno = "Há ".($minHoje - $minutos )*(-1)." Minutos";
-
-    }
-    elseif ($horaHoje > $hora and ($horaHoje - $hora) > 1 and ($diaHoje - $dia) < 1 ) 
+    if ( ($horaHoje - $hora) < 1  and ($diaHoje - $dia) < 1 and ($mesHoje - $mes) < 1) 
     {
-
-        $retorno = " Há ".($horaHoje - $hora )." Horas";
-
+        $retorno = "Há ".($minHoje - $minutos )." Minutos";
     }
-    elseif ($horaHoje > $hora and ($horaHoje - $hora) < 24 and ($diaHoje - $dia) >= 1)  
+    elseif ( ($horaHoje - $hora) >= 1 and ($diaHoje - $dia) < 1 and ($mesHoje - $mes) < 1 ) 
+    {
+        $retorno = " Há ".($horaHoje - $hora )." Horas";
+    }
+    elseif ( ($horaHoje - $hora) < 24 and ($diaHoje - $dia) >= 1 and ($mesHoje - $mes) < 1)  
     {
         
         $retorno = " Há ".($diaHoje - $dia)." dia";
     }
-
-    $teste = $diaHoje - $dia;
-
+        elseif ( ($horaHoje - $hora) < 24 and ($diaHoje - $dia) >= 1 and ($mesHoje - $mes) >= 1 )  
+    {   
+        
+        $retorno = " Há ".($diaHoje - $dia)." Meses";
+    }
+    $teste = $mesHoje - $mes;
     return ($retorno);
 }
-
 #Essa funcao verifica se o valor informado para horas e valido
 #Por:  Pedro Henrique
 #Data: 21/10/2016
-
 function validateHours($hour)
 {
     if (!empty($hour))
     {
         $h = (int) substr($hour, 0, 2);
         $m = (int) substr($hour, 3, 4);
-
         if ($h <= 23 && $m <= 59)
         {
             return true;
@@ -67,7 +57,6 @@ function validateHours($hour)
         return false;
     }
 }
-
 #Essa funcao preenche o combo de horas disponiveis para atividade rural
 #Por:  Pedro Henrique
 #Data: 13/09/2016
@@ -78,33 +67,27 @@ function gerarHoras($param)
     
     while($value < $param)
     {
-	$value += 0.5;
-		
-	$hours[(string)$value] = (string)$value;
+    $value += 0.5;
+        
+    $hours[(string)$value] = (string)$value;
     }
     
     return $hours;
 }
-
 #Essa funcao preenche o combo de horas disponiveis para atividade rural
 #Por:  Pedro Henrique
 #Data: 13/09/2016
-
 function generateHours($param)
 {
     $value = 0.0;
     $hours = array();
-
     while ($value < $param)
     {
         $value += 0.5;
-
         $hours[(string) $value] = (string) $value;
     }
-
     return $hours;
 }
-
 #Essa funcao converte coordenadas do padrao DD para DMS e de DMS para DD
 #Por:  Pedro Henrique
 #Data: 14/04/2016
@@ -116,18 +99,14 @@ function convertCoord($opcao, $valor01, $valor02, $valor03)
         $grausLon = (int) (strstr($valor02, '.', true));
         $minutosLat = (float) ('0' . strstr($valor01, '.', false));
         $minutosLon = (float) ('0' . strstr($valor02, '.', false));
-
         $auxLat = ($minutosLat * 60);
         $auxLon = ($minutosLon * 60);
-
         $minutosLat = (int) (strstr($auxLat, '.', true));
         $minutosLon = (int) (strstr($auxLon, '.', true));
         $segundosLat = (float) ('0' . strstr($auxLat, '.', false));
         $segundosLon = (float) ('0' . strstr($auxLon, '.', false));
-
         $segundosLat = round(($segundosLat * 60), 1);
         $segundosLon = round(($segundosLon * 60), 1);
-
         if ($grausLat < 0) 
         {
             $auxLat = ($grausLat * -1) . "&#176;" . $minutosLat . "'" . $segundosLat . '"S';
@@ -145,7 +124,6 @@ function convertCoord($opcao, $valor01, $valor02, $valor03)
         {
             $auxLon = ($grausLon * -1) . "&#176;" . $minutosLon . "'" . $segundosLon . '"E';
         }
-
         $coords = array
         (
             'latitude' => $auxLat, 
@@ -171,25 +149,17 @@ function convertCoord($opcao, $valor01, $valor02, $valor03)
         return NULL;
     }
 }
-
 #funcao para formatar a data no grid
-
 function formatar_data($valor) {
     return FormatDateTime($valor, 7);
 }
-
 #funcao para exibir mensagem de interacao com usuario
-
 function msgAlert($class, $method, $param, $msg) {
-
 // Change the value of the outputText field
     echo "<script language='javascript' type='text/javascript'>\n";
-
     echo "location.href='index.php?class=" . $class . "&method=" . $method . "&" . $param . "&msg=" . $msg . "';\n";
-
     echo "</script>";
 }
-
 /**
  *
  * @param int $time O tempo em segundos
@@ -235,12 +205,9 @@ function time1text($time) {
 //    $time = ($time - $fator) % 30;
 //    $days = floor($time);
 //$time = $time % 86400;
-
     $years = floor($time / 365);
     $months = floor(($time % 365) / 30);
     $days = (($time % 365) % 30);
-
-
     if ($years > 0)
         $response[] = $years . ' ano' . ($years > 1 ? 's' : ' ');
     if ($months > 0)
@@ -249,7 +216,6 @@ function time1text($time) {
         $response[] = $days . ' dia' . ($days > 1 ? 's' : ' ');
     return implode(', ', $response);
 }
-
 /**
  *
  * @param int $time O tempo em segundos
@@ -282,7 +248,6 @@ function time2text($time) {
         $response[] = $seconds . ' segundo' . ($seconds > 1 ? 's' : ' ');
     return implode(', ', $response);
 }
-
 function diasDeDiferenca($dataInicial, $dataFinal) {
     if ($dataInicial && $dataFinal) {
         $vetorDataInicial = explode('/', $dataInicial);
@@ -297,36 +262,29 @@ function diasDeDiferenca($dataInicial, $dataFinal) {
     }
     return $dias;
 }
-
 //calcular idade
 function calcularIdade($data_nasc) {
     return floor((time() - strtotime($data_nasc) ) / 31556926);
 }
-
 function formatar_hora($valor) {
     $hora = substr($valor, 0, 2) . ":" . substr($valor, 3, 2);
 //return strftime('%H:%M', $valor);
     return $hora;
 //return $valor;
 }
-
 function formatar_hora2($valor) {
     $hora = substr($valor, 11, 2) . ":" . substr($valor, 14, 2);
 //return strftime('%H:%M', $valor);
     return $hora;
 //return $valor;
 }
-
 function formatar_time($valor) {
     if ( $valor != null)
     {
     $hora = substr($valor, 11, 2) . "h" . substr($valor, 14, 2);
     }
     return $hora;
-
 }
-
-
 function GravarDataPostgres($data) {
     $tmp = str_replace("'", "''", $data);
     if ($tmp == "") {
@@ -342,13 +300,11 @@ function GravarDataPostgres($data) {
 #     return date("Y-m-d", $dataatual);
     }
 }
-
 function FormatarDataPostgres($data) {
     $dataemvetor = explode("-", $data);
     $dataatual = mktime(0, 0, 0, $dataemvetor[1], $dataemvetor[0], $dataemvetor[2]);
     return date("d/m/Y", $dataatual);
 }
-
 function FormatDateTime($ts, $namedformat) {
     $separador = "/";
     $formato = "dd/mm/yyyy";
@@ -515,11 +471,9 @@ function FormatDateTime($ts, $namedformat) {
         }
     }
 }
-
 function FormatDateTime_old($ts, $namedformat) {
     define(EW_DATE_SEPARATOR, "/", true);
     define(DEFAULT_DATE_FORMAT, "dd/mm/yyyy", true);
-
     $DefDateFormat = str_replace("yyyy", "%Y", DEFAULT_DATE_FORMAT);
     $DefDateFormat = str_replace("mm", "%m", $DefDateFormat);
     $DefDateFormat = str_replace("dd", "%d", $DefDateFormat);
@@ -677,19 +631,14 @@ function FormatDateTime_old($ts, $namedformat) {
         }
     }
 }
-
 function dataExtenso($data) {
 // leitura das datas
     $dia = date($data, 'd');
     $mes = date($data, 'm');
     $ano = date($data, 'Y');
     $semana = date($data, 'w');
-
-
 // configuração mes
-
     switch ($mes) {
-
         case 1: $mes = "JANEIRO";
             break;
         case 2: $mes = "FEVEREIRO";
@@ -715,12 +664,8 @@ function dataExtenso($data) {
         case 12: $mes = "DEZEMBRO";
             break;
     }
-
-
 // configuração semana
-
     switch ($semana) {
-
         case 0: $semana = "DOMINGO";
             break;
         case 1: $semana = "SEGUNDA FEIRA";
@@ -736,14 +681,10 @@ function dataExtenso($data) {
         case 6: $semana = "S�?BADO";
             break;
     }
-
     return "$dia DE $mes DE $ano";
 }
-
 function retornaMes($param) {
     switch ($param) {
-
-
         case 1: $mes = "Janeiro";
             break;
         case 2: $mes = "Fevereiro";
@@ -771,7 +712,6 @@ function retornaMes($param) {
     }
     return $mes;
 }
-
 function defineRangerMes($mes1, $ano) {
     switch ($mes1) {
         case 0: $mes = " start='01/01/" . $ano . "' end='31/12/" . $ano . "' label='Meses' ";
@@ -803,17 +743,12 @@ function defineRangerMes($mes1, $ano) {
     }
     return $mes;
 }
-
 function validaCPF($cpf) {
-
     $status = false;
-
     if (!is_numeric($cpf)) {
         $status = false;
     } else {
-
         /* aqui ele verifica se todos os números digitados são iguais, caso sejam, faz o mesmo que na condição anterior */
-
         if (($cpf == '11111111111') || ($cpf == '22222222222') ||
                 ($cpf == '33333333333') || ($cpf == '44444444444') ||
                 ($cpf == '55555555555') || ($cpf == '66666666666') ||
@@ -821,17 +756,13 @@ function validaCPF($cpf) {
                 ($cpf == '99999999999') || ($cpf == '00000000000')) {
             $status = false;
         } else {
-
             /* se todos os testes anteriores retonaram true, então será iniciada a verificação dos números */
             /* primeiro o script vai pegar o numero do dígito verificador */
-
             $dv_informado = substr($cpf, 9, 2);
             for ($i = 0; $i <= 8; $i++) {
                 $digito[$i] = substr($cpf, $i, 1);
             }
-
             /* Agora será calculado o valor do décimo dígito de verificação */
-
             $posicao = 10;
             $soma = 0;
             for ($i = 0; $i <= 8; $i++) {
@@ -844,12 +775,9 @@ function validaCPF($cpf) {
             } else {
                 $digito[9] = 11 - $digito[9];
             }
-
             /* Agora será calculado o valor do décimo primeiro dígito de verificação */
-
             $posicao = 11;
             $soma = 0;
-
             for ($i = 0; $i <= 9; $i++) {
                 $soma = $soma + $digito[$i] * $posicao;
                 $posicao = $posicao - 1;
@@ -860,9 +788,7 @@ function validaCPF($cpf) {
             } else {
                 $digito[10] = 11 - $digito[10];
             }
-
             /* Nessa parte do script será verificado se o dígito verificador é igual ao informado pelo usuário */
-
             $dv = $digito[9] * 10 + $digito[10];
             if ($dv != $dv_informado) {
                 $status = false;
@@ -872,7 +798,6 @@ function validaCPF($cpf) {
     }
     return $status;
 }
-
 function validaCNPJ($cnpj) {
     if (strlen($cnpj) <> 14)
         return false;
@@ -890,7 +815,6 @@ function validaCNPJ($cnpj) {
             ($cnpj[11] * 2);
     $resto = $soma1 % 11;
     $digito1 = $resto < 2 ? 0 : 11 - $resto;
-
     $soma2 = ($cnpj[0] * 6) +
             ($cnpj[1] * 5) +
             ($cnpj[2] * 4) +
@@ -908,12 +832,10 @@ function validaCNPJ($cnpj) {
     $digito2 = $resto < 2 ? 0 : 11 - $resto;
     return (($cnpj[12] == $digito1) && ($cnpj[13] == $digito2));
 }
-
 function valorPorExtenso($valor = 0) {
     $singular = array("centavo", "real", "mil", "milhão", "bilhão", "trilhão", "quatrilhão");
     $plural = array("centavos", "reais", "mil", "milhões", "bilhões", "trilhões",
         "quatrilhões");
-
     $c = array("", "cem", "duzentos", "trezentos", "quatrocentos",
         "quinhentos", "seiscentos", "setecentos", "oitocentos", "novecentos");
     $d = array("", "dez", "vinte", "trinta", "quarenta", "cinquenta",
@@ -922,15 +844,12 @@ function valorPorExtenso($valor = 0) {
         "dezesseis", "dezesete", "dezoito", "dezenove");
     $u = array("", "um", "dois", "três", "quatro", "cinco", "seis",
         "sete", "oito", "nove");
-
     $z = 0;
-
     $valor = number_format($valor, 2, ".", ".");
     $inteiro = explode(".", $valor);
     for ($i = 0; $i < count($inteiro); $i++)
         for ($ii = strlen($inteiro[$i]); $ii < 3; $ii++)
             $inteiro[$i] = "0" . $inteiro[$i];
-
 // $fim identifica onde que deve se dar junção de centenas por "e" ou por "," ;)
     $fim = count($inteiro) - ($inteiro[count($inteiro) - 1] > 0 ? 1 : 2);
     for ($i = 0; $i < count($inteiro); $i++) {
@@ -938,7 +857,6 @@ function valorPorExtenso($valor = 0) {
         $rc = (($valor > 100) && ($valor < 200)) ? "cento" : $c[$valor[0]];
         $rd = ($valor[1] < 2) ? "" : $d[$valor[1]];
         $ru = ($valor > 0) ? (($valor[1] == 1) ? $d10[$valor[2]] : $u[$valor[2]]) : "";
-
         $r = $rc . (($rc && ($rd || $ru)) ? " e " : "") . $rd . (($rd &&
                 $ru) ? " e " : "") . $ru;
         $t = count($inteiro) - 1 - $i;
@@ -953,15 +871,12 @@ function valorPorExtenso($valor = 0) {
             $rt = $rt . ((($i > 0) && ($i <= $fim) &&
                     ($inteiro[0] > 0) && ($z < 1)) ? ( ($i < $fim) ? ", " : " e ") : " ") . $r;
     }
-
     return($rt ? $rt : "zero");
 }
-
 function diasPorExtenso($valor = 0) {
     $singular = array("centavo", "dias", "mil", "milhão", "bilhão", "trilhão", "quatrilhão");
     $plural = array("centavos", "dias", "mil", "milhões", "bilhões", "trilhões",
         "quatrilhões");
-
     $c = array("", "cem", "duzentos", "trezentos", "quatrocentos",
         "quinhentos", "seiscentos", "setecentos", "oitocentos", "novecentos");
     $d = array("", "dez", "vinte", "trinta", "quarenta", "cinquenta",
@@ -970,15 +885,12 @@ function diasPorExtenso($valor = 0) {
         "dezesseis", "dezesete", "dezoito", "dezenove");
     $u = array("", "um", "dois", "três", "quatro", "cinco", "seis",
         "sete", "oito", "nove");
-
     $z = 0;
-
     $valor = number_format($valor, 2, ".", ".");
     $inteiro = explode(".", $valor);
     for ($i = 0; $i < count($inteiro); $i++)
         for ($ii = strlen($inteiro[$i]); $ii < 3; $ii++)
             $inteiro[$i] = "0" . $inteiro[$i];
-
 // $fim identifica onde que deve se dar junção de centenas por "e" ou por "," ;)
     $fim = count($inteiro) - ($inteiro[count($inteiro) - 1] > 0 ? 1 : 2);
     for ($i = 0; $i < count($inteiro); $i++) {
@@ -986,7 +898,6 @@ function diasPorExtenso($valor = 0) {
         $rc = (($valor > 100) && ($valor < 200)) ? "cento" : $c[$valor[0]];
         $rd = ($valor[1] < 2) ? "" : $d[$valor[1]];
         $ru = ($valor > 0) ? (($valor[1] == 1) ? $d10[$valor[2]] : $u[$valor[2]]) : "";
-
         $r = $rc . (($rc && ($rd || $ru)) ? " e " : "") . $rd . (($rd &&
                 $ru) ? " e " : "") . $ru;
         $t = count($inteiro) - 1 - $i;
@@ -1001,12 +912,9 @@ function diasPorExtenso($valor = 0) {
             $rt = $rt . ((($i > 0) && ($i <= $fim) &&
                     ($inteiro[0] > 0) && ($z < 1)) ? ( ($i < $fim) ? ", " : " e ") : " ") . $r;
     }
-
     return($rt ? $rt : "zero");
 }
-
 function pegaMac() {
-
     exec("ipconfig /all", $output);
     foreach ($output as $line) {
         if (preg_match("/(.*)Endereço físico(.*)/", $line)) {
@@ -1016,7 +924,6 @@ function pegaMac() {
     }
     return $mac;
 }
-
 function getMac()
 {      
         //for linux
@@ -1028,15 +935,12 @@ function getMac()
         //Find the position of Physical text 
         $pmac = strpos($mycom, $findme);
         $mac = substr($mycom, ($pmac + 37), 18);
-
         return $mac;
 }
-
 function getUserIP() {
     $client = @$_SERVER['HTTP_CLIENT_IP'];
     $forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
     $remote = $_SERVER['REMOTE_ADDR'];
-
     if (filter_var($client, FILTER_VALIDATE_IP)) {
         $ip = $client;
     } elseif (filter_var($forward, FILTER_VALIDATE_IP)) {
@@ -1046,13 +950,9 @@ function getUserIP() {
     }
     return $ip;
 }
-
 function getOS() { 
-
     $user_agent = $_SERVER['HTTP_USER_AGENT'];
-
     $os_platform    =   "Unknown OS Platform";
-
     $os_array       =   array(
                             '/windows nt 10/i'     =>  'Windows 10',
                             '/windows nt 6.3/i'     =>  'Windows 8.1',
@@ -1078,49 +978,37 @@ function getOS() {
                             '/blackberry/i'         =>  'BlackBerry',
                             '/webos/i'              =>  'Mobile'
                         );
-
     foreach ($os_array as $regex => $value) { 
-
         if (preg_match($regex, $user_agent)) {
             $os_platform    =   $value;
         }
-
     }   
-
     return $os_platform;
-
 }
-
 function retornaCinquentaAnos() {
-	$itens = array();
-	$itens['0'] = 'TODOS';
-	for ($index = (date('Y')+1); $index > 1960; $index--) {
-		$itens[$index] = $index;
-	}
-
-	return $itens;
+    $itens = array();
+    $itens['0'] = 'TODOS';
+    for ($index = (date('Y')+1); $index > 1960; $index--) {
+        $itens[$index] = $index;
+    }
+    return $itens;
 }
-
 function retornaAnocomZero() {
     $itens = array();
     $itens['0'] = 'TODOS';
     for ($index = (date('Y')+1); $index > 2009; $index--) {
         $itens[$index] = $index;
     }
-
     return $itens;
 }
-
 function retornaAnocomZeroPPA() {
-	$itens = array();
-	$itens['0'] = 'TODOS';
-	for ($index = (date('Y') + 2); $index > 2009; $index--) {
-		$itens[$index] = $index;
-	}
-
-	return $itens;
+    $itens = array();
+    $itens['0'] = 'TODOS';
+    for ($index = (date('Y') + 2); $index > 2009; $index--) {
+        $itens[$index] = $index;
+    }
+    return $itens;
 }
-
 function retornaAnosemZero() {
     $itens = array();
     $itens['2017'] = '2017';
@@ -1131,24 +1019,19 @@ function retornaAnosemZero() {
     $itens['2012'] = '2012';
     $itens['2011'] = '2011';
     $itens['2010'] = '2010';
-
     return $itens;
 }
-
 function formatar_moeda($valor) {
     return number_format($valor, 2, ',', '.');
 }
-
 function bissexto($ano) {
     $bissexto = false;
 // Divisível por 4 e não divisível por 100 ou divisível por 400
     if ((($ano % 4) == 0 && ($ano % 100) != 0) || ($ano % 400) == 0) {
         $bissexto = true;
     }
-
     return $bissexto;
 }
-
 /**
  * Função para gerar senhas aleatórias
  *
