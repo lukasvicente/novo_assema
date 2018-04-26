@@ -19,25 +19,31 @@ function Tempo_Post($data) {
     $minutos = substr($data,14,2);
     $segundos = substr($data,17,2);
 
-    if ( $horaHoje > $hora and ($horaHoje - $hora) < 1  and ($diaHoje - $dia) < 1 ) 
+    if ( ($horaHoje - $hora) < 1  and ($diaHoje - $dia) < 1 and ($mesHoje - $mes) < 1) 
     {
 
-        $retorno = "Há ".($minHoje - $minutos )*(-1)." Minutos";
+        $retorno = "Há ".($minHoje - $minutos )." Minutos";
 
     }
-    elseif ($horaHoje > $hora and ($horaHoje - $hora) > 1 and ($diaHoje - $dia) < 1 ) 
+    elseif ( ($horaHoje - $hora) >= 1 and ($diaHoje - $dia) < 1 and ($mesHoje - $mes) < 1 ) 
     {
 
         $retorno = " Há ".($horaHoje - $hora )." Horas";
 
     }
-    elseif ($horaHoje > $hora and ($horaHoje - $hora) < 24 and ($diaHoje - $dia) >= 1)  
+    elseif ( ($horaHoje - $hora) < 24 and ($diaHoje - $dia) >= 1 and ($mesHoje - $mes) < 1)  
     {
         
         $retorno = " Há ".($diaHoje - $dia)." dia";
     }
+        elseif ( ($horaHoje - $hora) < 24 and ($diaHoje - $dia) >= 1 and ($mesHoje - $mes) >= 1 )  
+    {   
+        
+        $retorno = " Há ".($diaHoje - $dia)." Meses";
+    }
 
-    $teste = $diaHoje - $dia;
+
+    $teste = $mesHoje - $mes;
 
     return ($retorno);
 }
