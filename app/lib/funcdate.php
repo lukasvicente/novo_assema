@@ -1,8 +1,10 @@
 <?php
 function Tempo_Post($data) {
+
     $diaHoje = date('d');
     $mesHoje = date('m');
     $anoHoje = date('Y');
+
     $horaHoje = date('H');
     $minHoje = date('i');
     $segHoje = date('s');
@@ -10,9 +12,11 @@ function Tempo_Post($data) {
     $ano = substr($data,0,4);
     $mes = substr($data,5,2);
     $dia = substr($data,8,2);
+
     $hora = substr($data,11,2);
     $minutos = substr($data,14,2);
     $segundos = substr($data,17,2);
+
     if ( ($horaHoje - $hora) < 1  and ($diaHoje - $dia) < 1 and ($mesHoje - $mes) < 1) 
     {
         $retorno = "Há ".($minHoje - $minutos )." Minutos";
@@ -24,14 +28,20 @@ function Tempo_Post($data) {
     elseif ( ($horaHoje - $hora) < 24 and ($diaHoje - $dia) >= 1 and ($mesHoje - $mes) < 1)  
     {
         
-        $retorno = " Há ".($diaHoje - $dia)." dia";
+        $retorno = " Há ".($diaHoje - $dia)." dias";
     }
-        elseif ( ($horaHoje - $hora) < 24 and ($diaHoje - $dia) >= 1 and ($mesHoje - $mes) >= 1 )  
+    elseif ( ($horaHoje - $hora) < 24 and ($diaHoje - $dia)  < 31 and ($mesHoje - $mes) >= 1 and  ($anoHoje - $ano) < 1  )  
     {   
         
-        $retorno = " Há ".($diaHoje - $dia)." Meses";
+        $retorno = " Há ".($mesHoje - $mes)." Meses";
     }
-    $teste = $mesHoje - $mes;
+    elseif ( ($horaHoje - $hora) < 24 and ($diaHoje - $dia)  < 1 and ($mesHoje - $mes) <= 12 and ($anoHoje - $ano) >= 1 )  
+    {   
+        
+        $retorno = " Há ".($anoHoje - $ano)." Ano";
+    }
+    $teste = $anoHoje - $ano;
+
     return ($retorno);
 }
 #Essa funcao verifica se o valor informado para horas e valido
