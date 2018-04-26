@@ -20,7 +20,7 @@ function Tempo_Post($data) {
     $segundos = substr($data,17,2);
 
     if ( $horaHoje > $hora and ($horaHoje - $hora) < 1  and ($diaHoje - $dia) < 1 ) 
-    {
+    { 
 
         $retorno = "Há ".($minHoje - $minutos )*(-1)." Minutos";
 
