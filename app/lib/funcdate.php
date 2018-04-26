@@ -1,6 +1,6 @@
 <?php
 function Tempo_Post($data) {
-
+ 
     $diaHoje = date('d');
     $mesHoje = date('m');
     $anoHoje = date('Y');
