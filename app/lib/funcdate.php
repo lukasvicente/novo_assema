@@ -10,7 +10,7 @@ function Tempo_Post($data) {
     $horaHoje = date('H');
     $minHoje = date('i');
     $segHoje = date('s');
-
+ 
     $ano = substr($data,0,4);
     $mes = substr($data,5,2);
     $dia = substr($data,8,2);
