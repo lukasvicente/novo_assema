@@ -44,8 +44,8 @@ class DestaqueWebservice
 			
 			$criteria = new TCriteria;
 			$criteria->add( new TFilter( 'situacao', '=', 'ATIVO' ) );
-			//$criteria->setProperty('order', 'datapublicacao DESC');
-			$criteria->setProperty('limit', '10');
+			$criteria->setProperty('order', 'datapublicacao DESC');
+			$criteria->setProperty('limit', '6');
 			
 			//if( filter_input(INPUT_GET, $whereTag)  ){ $criteria->setProperty('limit', '3'); }	
 			
@@ -85,7 +85,7 @@ class DestaqueWebservice
 			}else
 			{
 				
-				$response[$successTag] = 2; //Não tem nenhum dado = 2
+				$response[$successTag] = 2; //Nï¿½o tem nenhum dado = 2
 				
 			}
 			
