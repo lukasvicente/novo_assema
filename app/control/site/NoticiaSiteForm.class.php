@@ -137,9 +137,16 @@ class NoticiaSiteForm extends TPage
 
             if( $msg == '' )
             {
+                if ( !empty( $dados['nomearquivo'] )){
+
                 $cadastro->nomearquivo = 'noticia_' .$cadastro->id.".jpg";
+
+                }else{
+                    $cadastro->nomearquivo = "semimagem.jpg";
+                }
                 $caminho = 'app/images/site/' . strtolower($cadastro->nomearquivo);
                 rename($source_file, $caminho);
+
                 $cadastro->store();
 
                 $msg = 'Dados armazenados com sucesso';
