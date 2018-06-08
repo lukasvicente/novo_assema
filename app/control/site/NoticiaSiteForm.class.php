@@ -140,10 +140,21 @@ class NoticiaSiteForm extends TPage
                 if ( !empty( $dados['nomearquivo'] )){
 
                 $cadastro->nomearquivo = 'noticia_' .$cadastro->id.".jpg";
+                $cadastro->nomearquivo = 'temp';
+
+                $cadastro->store();
+
+                $nomearquivo = 'noticia_' . $cadastro->id . '.jpg';
+
+                $cadastro->nomearquivo = $nomearquivo;
+
 
                 }else{
-                    $cadastro->nomearquivo = "semimagem.jpg";
+
+                $cadastro->nomearquivo = "semimagem.jpg";
+
                 }
+
                 $caminho = 'app/images/site/' . strtolower($cadastro->nomearquivo);
                 rename($source_file, $caminho);
 
@@ -208,6 +219,9 @@ class NoticiaSiteForm extends TPage
                 TTransaction::open('pg_ceres');   // open a transaction with database 'samples'
 
                 $object = new NoticiaSiteRecord( $key );  // instantiates object City
+
+                TScript::create("$('#photo_frame').html('')");
+                TScript::create("$('#photo_frame').append(\"<img style='width:100%' src='app/images/site/{$object->nomearquivo}'>\");");
 
                 $this->form->setData( $object );   // fill the form with the active record data
 
