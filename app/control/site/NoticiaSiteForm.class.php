@@ -8,7 +8,7 @@
 //ini_set('display_errors', 1);
 //ini_set('display_startup_erros', 1);
 //error_reporting(E_ALL);
-
+include_once 'app/lib/funcdate.php';
 class NoticiaSiteForm extends TPage
 {
 
@@ -18,7 +18,7 @@ class NoticiaSiteForm extends TPage
     public function __construct() {
 		
         parent::__construct();
-        
+
 
         $this->form = new BootstrapFormBuilder('form_noticia_site');
         $this->form->setFormTitle('Formulário de Conteúdo Notícia');
@@ -31,11 +31,28 @@ class NoticiaSiteForm extends TPage
         $situacao = new TCombo('situacao');
         $autor = new TEntry('autor');
         $datapublicacao = new TDateTime('datapublicacao');
+        $fimpublicacao = new TDateTime('fimpublicacao');
         $tipo      = new TRadioGroup('tipo');
         $imagem    = new TFile('nomearquivo');
+        $site_categoria_id = new TCombo('site_categoria_id');
+
+        TTransaction::open('pg_ceres');
+
+        // load items from repository
+        $collection = CategoriaSiteRecord::all();
+
+        // add the combo items
+        $items = array();
+        foreach ($collection as $object)
+        {
+            $items[$object->id] = $object->nome;
+        }
+        TTransaction::close();
+
+        $site_categoria_id->addItems($items);
 
         $imagem->setCompleteAction(new TAction(array($this, 'onComplete')));
-        $imagem->setAllowedExtensions( ['gif', 'png', 'jpg', 'jpeg'] );
+        //$imagem->setAllowedExtensions( ['gif', 'png', 'jpg', 'jpeg'] );
 
         $items = array( 'SLIDE' => 'Slide', 'DESTAQUE' => 'Destaque');
         $tipo->addItems($items);
@@ -56,16 +73,17 @@ class NoticiaSiteForm extends TPage
         $titulo->setFontSize(10);
 
         $this->form->appendPage('Artigo');
-        //$this->form->addFields( [ new TLabel('Nome <font color=red><b>*</b></font>') ],[ $nome ] );
         $this->form->addFields( [ new TLabel('Titulo <font color=red><b>*</b></font>') ],[ $nome_titulo ] );
-        $this->form->addFields( [ new TLabel('Tipo Publicação <font color=red><b>*</b></font>') ],[ $tipo ] );
+        $this->form->addFields( [ new TLabel('Tipo da Publicação <font color=red><b>*</b></font>') ],[ $tipo ] );
+        $this->form->addFields( [ new TLabel('Categoria') ],[ $site_categoria_id ] );
         $this->form->addFields( [ new TLabel('Descrição') ],[ $descricao ] );
         $this->form->addFields( [ new TLabel('Situação <font color=red><b>*</b></font>') ],[ $situacao ] );
         $this->form->appendPage('Opções');
-        $this->form->addFields( [ new TLabel('Data Publicação <font color=red><b>*</b></font>') ],[ $datapublicacao ] );
-        $this->form->addFields( [ new TLabel('Autor <font color=red><b>*</b></font>') ],[ $autor ] );
+        $this->form->addFields( [ new TLabel('Data da Publicação <font color=red><b>*</b></font>') ],[ $datapublicacao ] );
+        $this->form->addFields( [ new TLabel('Fim da Publicação') ],[ $fimpublicacao ] );
+        $this->form->addFields( [ new TLabel('Autor') ],[ $autor ] );
         $this->form->appendPage('Imagem');
-        $this->form->addFields( [ new TLabel('Imagem<font color=red><b>*</b></font>') ],[ $imagem ] );
+        $this->form->addFields( [ new TLabel('Imagem') ],[ $imagem ] );
 
         $this->form->addFields( [''], [ $codigo ] );
 
@@ -105,6 +123,7 @@ class NoticiaSiteForm extends TPage
 
         $cadastro->usuarioalteracao = $_SESSION['usuario'];
         $cadastro->dataalteracao = date("d/m/Y H:i:s");
+        $cadastro->apelido = strtolower(tiraAcento($cadastro->titulo));
 
         $dados = $cadastro->toArray();
 
@@ -123,21 +142,21 @@ class NoticiaSiteForm extends TPage
             $msg .= 'A Situação deve ser informada.';
 
         }
+        if( empty( $dados['datapublicacao'] ) )
+        {
 
-        $source_file   = 'tmp/'.$cadastro->nomearquivo;
-        $target_file   = 'app/images/site/noticia/' . $cadastro->nomearquivo;
-        $finfo         = new finfo(FILEINFO_MIME_TYPE);
+            $msg .= 'A data da publicação ser informada.';
 
-
-            // move to the target directory
-           // rename($source_file, $target_file);
+        }
 
         try
         {
 
             if( $msg == '' )
             {
-                if ( !empty( $dados['nomearquivo'] )){
+                if ( !empty( $dados['nomearquivo'] ) and $dados['nomearquivo'] != "semimagem.jpg"){
+
+                $source_file   = 'tmp/'.$cadastro->nomearquivo;
 
                 $cadastro->nomearquivo = 'noticia_' .$cadastro->id.".jpg";
                 $cadastro->nomearquivo = 'temp';
@@ -148,15 +167,14 @@ class NoticiaSiteForm extends TPage
 
                 $cadastro->nomearquivo = $nomearquivo;
 
+				$caminho = 'app/images/site/' . strtolower($cadastro->nomearquivo);
+                rename($source_file, $caminho);
 
                 }else{
 
                 $cadastro->nomearquivo = "semimagem.jpg";
 
                 }
-
-                $caminho = 'app/images/site/' . strtolower($cadastro->nomearquivo);
-                rename($source_file, $caminho);
 
                 $cadastro->store();
 
@@ -227,13 +245,7 @@ class NoticiaSiteForm extends TPage
 
                 TTransaction::close();           // close the transaction
 
-            }else
-            {
-
-                $this->form->clear();
-
             }
-
         } catch (Exception $e)
         {
 

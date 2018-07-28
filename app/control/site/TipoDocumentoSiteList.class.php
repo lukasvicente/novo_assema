@@ -12,7 +12,7 @@
 use Adianti\Database\TFilter1;
 //use Adianti\Widget\Datagrid\TDatagridTables;
 
-class NoticiaSiteList extends TPage
+class TipoDocumentoSiteList extends TPage
 {
     protected $form;     // registration form
     protected $datagrid; // listing
@@ -23,8 +23,8 @@ class NoticiaSiteList extends TPage
     {
         parent::__construct();
 
-        $this->form = new BootstrapFormBuilder('form_search_noticiaSite');
-        $this->form->setFormTitle(('Listagem de Notícias'));
+        $this->form = new BootstrapFormBuilder('form_search_TipoDocumento');
+        $this->form->setFormTitle(('Listagem de Conteudo Sobre'));
 
         $opcao = new TCombo('opcao');
         $nome = new TEntry('nome');
@@ -43,7 +43,7 @@ class NoticiaSiteList extends TPage
         $nome->setProperty('placeholder', 'Informe o valor da busca');
         
         $this->form->addAction(_t('Find'), new TAction(array($this, 'onSearch')), 'fa:search');
-        $this->form->addAction(_t('New'),  new TAction(array('NoticiaSiteForm', 'onEdit')), 'bs:plus-sign green');
+        $this->form->addAction(_t('New'),  new TAction(array('SobreSiteForm', 'onEdit')), 'bs:plus-sign green');
 
         $this->datagrid = new BootstrapDatagridWrapper(new TDataGrid);
         $this->datagrid->style = 'width: 100%';
@@ -52,26 +52,14 @@ class NoticiaSiteList extends TPage
         // creates the datagrid columns
         //$column_id = new TDataGridColumn('id', 'Id', 'center', 50);
         $column_name = new TDataGridColumn('titulo', ('Titulo'), 'left');
-        $column_datapublicacao = new TDataGridColumn('datapublicacao', ('Publicação'), 'left');
-        $column_situacao = new TDataGridColumn('situacao', ('Situação'), 'left');
+        $column_situacao = new TDataGridColumn('situacao', ('Situaçâo'), 'left');
 
 
 
         // add the columns to the DataGrid
         //$this->datagrid->addColumn($column_id);
         $this->datagrid->addColumn($column_name);
-        $this->datagrid->addColumn($column_datapublicacao);
         $this->datagrid->addColumn($column_situacao);
-
-        $column_situacao->setTransformer( function($value, $object, $row) {
-            $class = ($value=='INATIVO') ? 'danger' : 'success';
-            $label = ($value=='INATIVO') ? ('INATIVO') : ('ATIVO');
-            $div = new TElement('span');
-            $div->class="label label-{$class}";
-            $div->style="text-shadow:none; font-size:12px; font-weight:lighter";
-            $div->add($label);
-            return $div;
-        });
 
 
 
@@ -85,7 +73,7 @@ class NoticiaSiteList extends TPage
         $column_name->setAction($order_name);
         
         // create EDIT action
-        $action_edit = new TDataGridAction(array('NoticiaSiteForm', 'onEdit'));
+        $action_edit = new TDataGridAction(array('SobreSiteForm', 'onEdit'));
         $action_edit->setButtonClass('btn btn-default');
         $action_edit->setLabel(_t('Edit'));
         $action_edit->setImage('fa:pencil-square-o blue fa-lg');
@@ -101,13 +89,6 @@ class NoticiaSiteList extends TPage
         $action_del->setField('id');
         //$action_del->setDid('id');
         $this->datagrid->addAction($action_del);
-
-        $action_onoff = new TDataGridAction(array($this, 'onTurnOnOff'));
-        $action_onoff->setButtonClass('btn btn-default');
-        $action_onoff->setLabel(_t('Activate/Deactivate'));
-        $action_onoff->setImage('fa:power-off fa-lg orange');
-        $action_onoff->setField('id');
-        $this->datagrid->addAction($action_onoff);
 
         $this->datagrid->createModel();
 
@@ -125,45 +106,20 @@ class NoticiaSiteList extends TPage
         parent::add($container);
     }
 
-    public function onTurnOnOff($param)
-
-    {
-        $key=$param['key'];
-        TTransaction::open('pg_ceres');
-
-        $cadastro = new NoticiaSiteRecord($key);
-
-        try
-        {
-
-            $cadastro->situacao = $cadastro->situacao == 'ATIVO' ? 'INATIVO' : 'ATIVO';
-            $cadastro->store();
-
-            TTransaction::close();
-            $this->onReload($param);
-
-        }
-        catch (Exception $e)
-        {
-            new TMessage('error', $e->getMessage());
-            TTransaction::rollback();
-        }
-    }
-
     function onReload($param = NULL)
     {
         
         TTransaction::open('pg_ceres');
 
-        $repository = new TRepository('NoticiaSiteRecord');
+        $repository = new TRepository('SobreSiteRecord');
         $limit = 10;
 
         $criteria = new TCriteria;
         //$criteria->setProperty('order', 'nome');
         if (empty($param['order']))
             {
-                $param['order'] = 'datapublicacao';
-                $param['direction'] = 'desc';
+                $param['order'] = 'nome';
+                $param['direction'] = 'asc';
             }
         $criteria->setProperties($param);
         $criteria->setProperty('limit', $limit);
@@ -176,7 +132,7 @@ class NoticiaSiteList extends TPage
             
             foreach ($cadastros as $cadastro)
             {
-                $cadastro->datapublicacao = TDate::date2br($cadastro->datapublicacao);
+                
                 $this->datagrid->addItem($cadastro);
             }
         }
@@ -196,7 +152,7 @@ class NoticiaSiteList extends TPage
     {
       
         TTransaction::open('pg_ceres');
-        $repository = new TRepository('NoticiaSiteRecord');
+        $repository = new TRepository('SobreSiteRecord');
         $limit = 10;
 
         $campo = $this->form->getFieldData('opcao');
@@ -263,19 +219,10 @@ class NoticiaSiteList extends TPage
         $key=$param['key'];
         TTransaction::open('pg_ceres');
 
-        $cadastro = new NoticiaSiteRecord($key);
+        $cadastro = new SobreSiteRecord($key);
 
         try{
-
-            if ($cadastro->nomearquivo <> "semimagem.jpg")
-            {
-
-            unlink("app/images/site/".$cadastro->nomearquivo);
-
-            }
-
             $cadastro->delete();
-
             new TMessage("info", "Registro deletado com sucesso!");
 
             TTransaction::close();

@@ -43,7 +43,7 @@ class NoticiaSiteWebservice
 			$repository = new TRepository('NoticiaSiteRecord');
 			
 			$criteria = new TCriteria;
-			//$criteria->add( new TFilter( 'situacao', '=', 'ATIVO' ) );
+			$criteria->add( new TFilter( 'situacao', '=', 'ATIVO' ) );
 			$criteria->setProperty('order', 'datapublicacao DESC');
 			//$criteria->setProperty('limit', '5');
 

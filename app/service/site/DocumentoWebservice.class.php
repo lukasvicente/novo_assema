@@ -46,7 +46,15 @@ class DocumentoWebservice
 			//$criteria->add( new TFilter( 'situacao', '=', 'ATIVO' ) );
 			//$criteria->setProperty('order', 'datapublicacao DESC');
 			$criteria->setProperty('limit', '10');
-			
+
+
+			$ano = $_REQUEST['ano'];
+
+			if($ano) 
+			{
+                $criteria->add( new TFilter( 'ano', '=', $ano  ));
+            }
+
 			//if( filter_input(INPUT_GET, $whereTag)  ){ $criteria->setProperty('limit', '3'); }	
 			
 			/*if( filter_input(INPUT_GET, $whereTag) ){
@@ -85,7 +93,7 @@ class DocumentoWebservice
 			}else
 			{
 				
-				$response[$successTag] = 2; //Não tem nenhum dado = 2
+				$response[$successTag] = 2; //Nï¿½o tem nenhum dado = 2
 				
 			}
 			
