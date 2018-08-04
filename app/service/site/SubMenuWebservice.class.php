@@ -17,9 +17,9 @@ use Adianti\Database\TCriteria;
 use Adianti\Database\TFilter;
 
 /*
- * Classe SliderMulherWebservice
+ * Classe SubMenuWebservice
  */
-class DocumentoWebservice
+class SubMenuWebservice
 {
 
 	static public function getDados()
@@ -40,32 +40,12 @@ class DocumentoWebservice
 
 			TTransaction::open('pg_ceres');
 			
-			$repository = new TRepository('vw_site_documentoRecord');
+			$repository = new TRepository('SubMenuSiteRecord');
 			
 			$criteria = new TCriteria;
 			//$criteria->add( new TFilter( 'situacao', '=', 'ATIVO' ) );
-			//$criteria->setProperty('order', 'datapublicacao DESC');
-			$criteria->setProperty('limit', '10');
-
-
-			$ano = $_REQUEST['ano'];
-			$tipo_documento = $_REQUEST['tipo_documento'];
-
-			if($ano) 
-			{
-                $criteria->add( new TFilter( 'ano', '=', $ano  ));
-            }
-
-            if($tipo_documento)
-            {
-                $criteria->add( new TFilter( 'tipo', '=', $tipo_documento  ));
-            }
-
-			//if( filter_input(INPUT_GET, $whereTag)  ){ $criteria->setProperty('limit', '3'); }	
-			
-			/*if( filter_input(INPUT_GET, $whereTag) ){
-				$criteria->add( new TFilter( 'id', '=', filter_input(INPUT_GET, $whereTag)  ));
-			}*/
+			$criteria->setProperty('order', 'id');
+			//$criteria->setProperty('limit', '5');
 
 			$collection = $repository->load( $criteria );
 			
@@ -81,17 +61,9 @@ class DocumentoWebservice
 				
 					$tempDocumento = array();
 					
-					$tempDocumento["documento_id"] = $object->documento_id;
-					$tempDocumento["nome_documento"] = $object->nome_documento;
-					$tempDocumento["descricao"] = $object->descricao;
-					$tempDocumento["arquivo"] = $object->arquivo;
-					$tempDocumento["tipo"] = $object->tipo;
-					$tempDocumento["ano"] = $object->ano;
-					$tempDocumento["mes"] = retornaMes($object->mes);
-					$tempDocumento["tipo_id"] = $object->tipo_id;
-					$tempDocumento["link"] = $object->link;
+					$tempDocumento["id"] = $object->id;
+					$tempDocumento["nome"] = $object->nome;
 
-					
 					$response[$dadosTag][$i++] = $tempDocumento; 
 				
 				}
@@ -121,6 +93,6 @@ class DocumentoWebservice
 	
 }
 
-DocumentoWebservice::getDados();
+SubMenuWebservice::getDados();
 
 ?>
