@@ -40,7 +40,7 @@ class TipoDocumentoWebservice
 
 			TTransaction::open('pg_ceres');
 			
-			$repository = new TRepository('Site_TipoDocumentoRecord');
+			$repository = new TRepository('SiteTipoDocumentoRecord');
 			
 			$criteria = new TCriteria;
 			//$criteria->add( new TFilter( 'situacao', '=', 'ATIVO' ) );
@@ -77,7 +77,7 @@ class TipoDocumentoWebservice
 			}else
 			{
 				
-				$response[$successTag] = 2; //Não tem nenhum dado = 2
+				$response[$successTag] = 2; //Nï¿½o tem nenhum dado = 2
 				
 			}
 			

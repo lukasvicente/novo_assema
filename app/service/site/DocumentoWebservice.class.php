@@ -43,9 +43,9 @@ class DocumentoWebservice
 			$repository = new TRepository('vw_site_documentoRecord');
 			
 			$criteria = new TCriteria;
-			//$criteria->add( new TFilter( 'situacao', '=', 'ATIVO' ) );
+			$criteria->add( new TFilter( 'situacao', '=', 'publicado' ) );
 			//$criteria->setProperty('order', 'datapublicacao DESC');
-			$criteria->setProperty('limit', '10');
+			//$criteria->setProperty('limit', '10');
 
 
 			$ano = $_REQUEST['ano'];

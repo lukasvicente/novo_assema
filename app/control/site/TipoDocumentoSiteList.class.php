@@ -43,7 +43,7 @@ class TipoDocumentoSiteList extends TPage
         $nome->setProperty('placeholder', 'Informe o valor da busca');
         
         $this->form->addAction(_t('Find'), new TAction(array($this, 'onSearch')), 'fa:search');
-        $this->form->addAction(_t('New'),  new TAction(array('SobreSiteForm', 'onEdit')), 'bs:plus-sign green');
+        $this->form->addAction(_t('New'),  new TAction(array('TipoDocumentoSiteForm', 'onEdit')), 'bs:plus-sign green');
 
         $this->datagrid = new BootstrapDatagridWrapper(new TDataGrid);
         $this->datagrid->style = 'width: 100%';
@@ -51,17 +51,11 @@ class TipoDocumentoSiteList extends TPage
         
         // creates the datagrid columns
         //$column_id = new TDataGridColumn('id', 'Id', 'center', 50);
-        $column_name = new TDataGridColumn('titulo', ('Titulo'), 'left');
-        $column_situacao = new TDataGridColumn('situacao', ('Situaçâo'), 'left');
-
-
+        $column_name = new TDataGridColumn('nome', ('Nome'), 'left');
 
         // add the columns to the DataGrid
         //$this->datagrid->addColumn($column_id);
         $this->datagrid->addColumn($column_name);
-        $this->datagrid->addColumn($column_situacao);
-
-
 
         // creates the datagrid column actions
         //$order_id = new TAction(array($this, 'onReload'));
@@ -111,11 +105,11 @@ class TipoDocumentoSiteList extends TPage
         
         TTransaction::open('pg_ceres');
 
-        $repository = new TRepository('SobreSiteRecord');
+        $repository = new TRepository('SiteTipoDocumentoRecord');
         $limit = 10;
 
         $criteria = new TCriteria;
-        //$criteria->setProperty('order', 'nome');
+        $criteria->setProperty('order', 'nome');
         if (empty($param['order']))
             {
                 $param['order'] = 'nome';
@@ -152,7 +146,7 @@ class TipoDocumentoSiteList extends TPage
     {
       
         TTransaction::open('pg_ceres');
-        $repository = new TRepository('SobreSiteRecord');
+        $repository = new TRepository('SiteTipoDocumentoRecord');
         $limit = 10;
 
         $campo = $this->form->getFieldData('opcao');
@@ -162,7 +156,7 @@ class TipoDocumentoSiteList extends TPage
 
         if (empty($param['order']))
             {
-                $param['order'] = 'titulo';
+                $param['order'] = 'nome';
                 $param['direction'] = 'asc';
             }
 
@@ -219,7 +213,7 @@ class TipoDocumentoSiteList extends TPage
         $key=$param['key'];
         TTransaction::open('pg_ceres');
 
-        $cadastro = new SobreSiteRecord($key);
+        $cadastro = new SiteTipoDocumentoRecord($key);
 
         try{
             $cadastro->delete();
