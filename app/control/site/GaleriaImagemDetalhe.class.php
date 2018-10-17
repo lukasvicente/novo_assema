@@ -143,19 +143,27 @@ class GaleriaImagemDetalhe extends TPage {
                 foreach ($cadastro->arquivo as $itemnomearquivo) {
 
                     $source_file = 'tmp/' . $itemnomearquivo;
-                    $cadastro->store();
-                    $itemnomearquivo = 'foto_' . filter_input(INPUT_GET, 'fk') . '_' . $cadastro->id . ".jpg";
 
+                    $tempCadastro = new GaleriaImagemSiteRecord();
+                    $tempCadastro->site_galeria_id = $cadastro->site_galeria_id;
+                    $tempCadastro->descricao = $cadastro->descricao;
+                    $tempCadastro->usuarioalteracao = $_SESSION['usuario'];
+                    $tempCadastro->dataalteracao = date("d/m/Y H:i:s");
+                    $tempCadastro->store();
 
-                    $target_file = 'app/images/site/teste/' . strtolower($itemnomearquivo);
+                    $itemnomearquivo = 'foto_' . filter_input(INPUT_GET, 'fk') . '_' . $tempCadastro->id . ".jpg";
+
+                    $target_file = 'app/images/site/galeria/' . strtolower($itemnomearquivo);
                     if (file_exists($source_file))
                     {
                         rename($source_file,$target_file);
-                        $cadastro->store();
+
+                        $tempCadastro->arquivo = $itemnomearquivo;
+                        $tempCadastro->store();
                     }
                 }
 
-                $cadastro->store();
+               // $cadastro->store();
 
                 $msg = 'Dados armazenados com sucesso';
 
@@ -184,7 +192,7 @@ class GaleriaImagemDetalhe extends TPage {
                 new TMessage( "info", $msg );
 
                 $param = array();
-                $param['key'] = $cadastro->site_galeria_id;
+                $param['key'] = $cadastro->id;
                 $param['fk'] = $cadastro->site_galeria_id;
                 TApplication::gotoPage( 'GaleriaImagemDetalhe', 'onEdit',$param );
 
@@ -206,7 +214,7 @@ class GaleriaImagemDetalhe extends TPage {
         TTransaction::open('pg_ceres'); // inicia transacao com o banco
         $repository = new TRepository('GaleriaImagemSiteRecord'); // instancia um repositorio da Classe
         $criteria = new TCriteria; // cria um criterio de selecao
-        $criteria->add(new TFilter('site_galeria_id', '=', filter_input ( INPUT_GET, 'key' )));
+        $criteria->add(new TFilter('site_galeria_id', '=', filter_input ( INPUT_GET, 'fk' )));
         $criteria->setProperty('order', 'descricao');
         $cadastros = $repository->load($criteria); // carrega os objetos de acordo com o criterio
         $this->datagrid->clear(); //limpa o grid
