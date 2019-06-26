@@ -17,7 +17,15 @@ class ProcessoForm extends TPage
     public function __construct() {
 		
         parent::__construct();
-        
+
+        $buttondependente = new TAction( ['ProcessoDocumentoDetalhe', 'onReload' ] );
+        $buttondependente->setParameter('key', '' . filter_input(INPUT_GET, 'key') . '');
+        $buttondependente->setParameter('fk', '' . filter_input(INPUT_GET, 'fk') . '');
+
+        $dropdown = new TDropDown('Ação', 'fa:list');
+        $dropdown->addAction( 'Documento', $buttondependente, 'onReload') ;
+        //$dropdown->addAction( 'Movimentação', new TAction(array('SocioList', 'onReload') ));
+
 
         $this->form = new BootstrapFormBuilder('form_Processo');
         $this->form->setFormTitle('Formulário de Processos');
@@ -25,8 +33,11 @@ class ProcessoForm extends TPage
         $codigo = new THidden('id');
         $nome = new TEntry('nome');
         $numero = new TEntry('numero');
-        $descricao = new THtmlEditor('descricao');
+        $origem = new TEntry('origem');
+        $autor = new TEntry('autor');
+        $descricao = new TText('descricao');
         $situacao = new TCombo('situacao');
+
 
         $nome->setProperty('placeholder', 'Nome do Processo');
         $nome->setSize('40%');
@@ -34,11 +45,17 @@ class ProcessoForm extends TPage
         $numero->setSize('40%');
         $numero->setProperty('placeholder', 'Numero do Processo');
 
-        $descricao->setSize( '80%', 200);
-        $situacao->addItems( ['A RECEBER' => 'A RECEBER',
-            'RECEBIDO' => 'RECEBIDO' ] );
+        $origem->setSize('40%');
+        $origem->setProperty('placeholder', 'Origem do Processo');
 
-        $situacao->setvalue('A RECEBER');
+        $autor->setSize('40%');
+        $autor->setProperty('placeholder', 'Autor do Processo');
+
+        $descricao->setSize( '40%', 100);
+        $situacao->addItems( ['TRAMITANDO' => 'TRAMITANDO',
+            'ENCERRADO' => 'ENCERRADO' ] );
+
+        $situacao->setvalue('TRAMITANDO');
 
 
         $titulo = new TLabel('<div style="position:floatval; width: 200px;"> <b>* Campo obrigatorio</b></div>');
@@ -49,13 +66,25 @@ class ProcessoForm extends TPage
 
         $this->form->addFields( [ new TLabel('Nome <font color=red><b>*</b></font>') ],[ $nome ] );
         $this->form->addFields( [ new TLabel('Numero <font color=red><b>*</b></font>') ],[ $numero ] );
-        $this->form->addFields( [ new TLabel('Descrição <font color=red><b>*</b></font>') ],[ $descricao ] );
+        $this->form->addFields( [ new TLabel('Origem') ],[ $origem ] );
+        $this->form->addFields( [ new TLabel('Autor') ],[ $autor ] );
+        $this->form->addFields( [ new TLabel('Descrição') ],[ $descricao ] );
         $this->form->addFields( [ new TLabel('Situação <font color=red><b>*</b></font>') ],[ $situacao ] );
 
         $this->form->addFields( [''], [ $codigo ] );
 
         $this->form->addAction( 'Salvar', new TAction( array( $this, 'onSave' ) ), 'ico_save.png' );
         $this->form->addAction('Voltar', new TAction(array('ProcessoList', 'onReload')), 'back_blue_arrow.png');
+
+        $vbox2 = new TVBox;
+
+        if (filter_input(INPUT_GET, 'key'))
+        {
+            $vbox2->add($dropdown);
+        }
+
+        parent::add($vbox2);
+
 
         $vbox = new TVBox;
         $vbox->add($this->form);

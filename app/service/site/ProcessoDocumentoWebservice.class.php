@@ -17,9 +17,9 @@ use Adianti\Database\TCriteria;
 use Adianti\Database\TFilter;
 
 /*
- * Classe SobreWebservice
+ * Classe SliderMulherWebservice
  */
-class ProcessoWebservice
+class ProcessoDocumentoWebservice
 {
 
 	static public function getDados()
@@ -40,14 +40,24 @@ class ProcessoWebservice
 
 			TTransaction::open('pg_ceres');
 			
-			$repository = new TRepository('ProcessoRecord');
+			$repository = new TRepository('ProcessoDocumentoRecord');
 			
 			$criteria = new TCriteria;
-			//$criteria->add( new TFilter( 'situacao', '=', 'ATIVO' ) );
-			$criteria->setProperty('order', 'nome');
-			//$criteria->setProperty('limit', '5');
+			$criteria->add( new TFilter( 'situacao', '=', 'PUBLICADO' ) );
+			//$criteria->setProperty('order', 'datapublicacao DESC');
+			//$criteria->setProperty('limit', '10');
 
-			$collection = $repository->load( $criteria );
+
+            $key = $_REQUEST['key'];
+
+
+            if($key)
+            {
+                $criteria->add( new TFilter( 'processo_id', '=', $key  ));
+            }
+
+
+            $collection = $repository->load( $criteria );
 			
 			if( $collection )
 			{
@@ -62,14 +72,11 @@ class ProcessoWebservice
 					$tempDocumento = array();
 					
 					$tempDocumento["id"] = $object->id;
-					$tempDocumento["nome"] = $object->nome;
-                    $tempDocumento["numero"] = $object->numero;
-                    $tempDocumento["autor"] = $object->autor;
-                    $tempDocumento["origem"] = $object->origem;
-                    $tempDocumento["situacao"] = $object->situacao;
-                    $tempDocumento["descricao"] = $object->descricao;
+					$tempDocumento["processo_id"] = $object->processo_id;
+                    $tempDocumento["nome"] = $object->nome;
+                    $tempDocumento["arquivo"] = $object->arquivo;
 
-					$response[$dadosTag][$i++] = $tempDocumento; 
+					$response[$dadosTag][$i++] = $tempDocumento;
 				
 				}
 				
@@ -98,6 +105,6 @@ class ProcessoWebservice
 	
 }
 
-ProcessoWebservice::getDados();
+ProcessoDocumentoWebservice::getDados();
 
 ?>

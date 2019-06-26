@@ -33,11 +33,11 @@ class ProcessoList extends TPage
         $this->form->addFields( [new TLabel('Busca')], [$nome] );
 
         $items = array();
-        $items['titulo'] = 'Titulo';
+        $items['nome'] = 'Nome';
  
         $opcao->addItems($items);
  
-        $opcao->setValue('titulo');
+        $opcao->setValue('nome');
         $opcao->setSize('30%');
         $nome->setSize('30%');
         $nome->setProperty('placeholder', 'Informe o valor da busca');
@@ -67,7 +67,7 @@ class ProcessoList extends TPage
         //$column_id->setAction($order_id);
         
         $order_name = new TAction(array($this, 'onReload'));
-        $order_name->setParameter('order', 'titulo');
+        $order_name->setParameter('order', 'nome');
         $column_name->setAction($order_name);
         
         // create EDIT action
@@ -76,6 +76,7 @@ class ProcessoList extends TPage
         $action_edit->setLabel(_t('Edit'));
         $action_edit->setImage('fa:pencil-square-o blue fa-lg');
         $action_edit->setField('id');
+        $action_edit->setFk('id');
 
         $this->datagrid->addAction($action_edit);
         

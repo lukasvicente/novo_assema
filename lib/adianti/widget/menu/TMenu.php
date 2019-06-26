@@ -1009,29 +1009,36 @@ if ($_GET["modulo"] == 'DIRECAO') {
                 TTransaction::close();
                 if ($aniversariantes) {
 
-
-
-                $mural .= '<!-- Aniversariantes Start -->
-                            <div class="box social-stats">
-                                
-                                <div class="title-bar">
-                                    <i class="fa fa-users"></i>Aniversariantes do Dia 
-                                      <div class="close-box">
-                                       
-                                      </div><div style="float: right; margin-right: 15px">' . date("d/m/Y") . '</div>
-                                </div>';
-                $mural .= '<ul>';
-
-                foreach ($aniversariantes as $aniversariante) {
-                    if (date("d") == $aniversariante->dia) {
-                        $mural .= '<li><i class="fa fa-arrow-right"></i>' . $aniversariante->nome ." / ". '<span>' . $aniversariante->cidade . '</span></li>';
+                    $mural .= '
+                <div class="content-header">
+            
+                  <!-- Default box -->
+                  <div class="box box-info">
+                    <div class="box-header with-border">
+                      <h3 class="box-title"><i class="fa fa-users"></i> Aniversariantes do Dia </h3>
+                        <div style="float: right; margin-right: 150px">' . date("d/m/Y") . '</div>
+                      <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Minimizar">
+                          <i class="fa fa-minus"></i></button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="Remover">
+                          <i class="fa fa-times"></i></button>
+                      </div>
+                    </div>
+                    ';
+                    foreach ($aniversariantes as $aniversariante) {
+                        if (date("d") == $aniversariante->dia) {
+                            $mural .= '<div class="box-body"><i class="fa fa-arrow-right"></i>
+                       ' . $aniversariante->nome ." / ". '<span>' . $aniversariante->cidade . '</span>
+                    </div>';
+                        }
                     }
-                }
-                $mural .= '</ul>';
 
-                $mural .= '</div>
-                            <!-- Aniversariantes End -->';
-                }
+                  $mural .= '
+                  
+                  </div>
+                  <!-- /.box -->
+                </div>';
+        }
 
          TTransaction::open('pg_ceres');
 
@@ -1064,6 +1071,8 @@ if ($_GET["modulo"] == 'DIRECAO') {
             </div>
         </div>';
 
+
+
         TTransaction::open('pg_ceres');
 
         $repository = new TRepository('UsuarioRecord');
@@ -1094,6 +1103,8 @@ if ($_GET["modulo"] == 'DIRECAO') {
                 </a>
             </div>
         </div>';
+
+
         return $mural;
 
     }
