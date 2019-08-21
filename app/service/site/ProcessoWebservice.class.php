@@ -68,6 +68,7 @@ class ProcessoWebservice
                     $tempDocumento["origem"] = $object->origem;
                     $tempDocumento["situacao"] = $object->situacao;
                     $tempDocumento["descricao"] = $object->descricao;
+                    $tempDocumento["apelido"] = $object->apelido;
 
 					$response[$dadosTag][$i++] = $tempDocumento; 
 				

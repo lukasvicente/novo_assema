@@ -70,7 +70,7 @@ class NoticiaSiteWebservice
 					$tempDocumento["mes"] = retornaMes(substr($object->datapublicacao,5,2));
 					$tempDocumento["dia"] = substr($object->datapublicacao,8,2);
 					$tempDocumento["situacao"] = $object->situacao;
-					$tempDocumento["situacao"] = $object->situacao;
+					$tempDocumento["apelido"] = $object->apelido;
 					$tempDocumento["autor"] = $object->autor;
                     $tempDocumento["hora"] = formatar_time($object->datapublicacao);
                     $tempDocumento["tempo"] = Tempo_Post($object->datapublicacao);

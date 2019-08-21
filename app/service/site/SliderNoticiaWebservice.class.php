@@ -72,7 +72,7 @@ class SliderNoticiaWebservice
 					$tempNoticia["descricao"] = $object->descricao;
 					$tempNoticia["nomearquivo"] = $object->nomearquivo;
 					//$tempNoticia["click"] = $object->click;
-					//$tempNoticia["tipo"] = $object->tipo;
+					$tempNoticia["apelido"] = $object->apelido;
 
 					$date = date_create($object->datapublicacao);
 
