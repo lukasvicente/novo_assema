@@ -101,6 +101,7 @@ class ProcessoForm extends TPage
 
         $cadastro->usuarioalteracao = $_SESSION['usuario'];
         $cadastro->dataalteracao = date("d/m/Y H:i:s");
+        $cadastro->apelido = strtolower(tiraAcento($cadastro->nome));
 
         $dados = $cadastro->toArray();
 

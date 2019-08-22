@@ -1,6 +1,18 @@
 <?php
 
+function formatarCpf($param){
 
+    $nbr_cpf = $param;
+
+    $parte_um     = substr($nbr_cpf, 0, 3);
+    $parte_dois   = substr($nbr_cpf, 3, 3);
+    $parte_tres   = substr($nbr_cpf, 6, 3);
+    $parte_quatro = substr($nbr_cpf, 9, 2);
+
+    $monta_cpf = "$parte_um.$parte_dois.$parte_tres-$parte_quatro";
+
+    return $monta_cpf;
+}
 function tiraAcento($str) {
 
     $str = preg_replace('/[áàãâä]/ui', 'a', $str);
@@ -10,8 +22,8 @@ function tiraAcento($str) {
     $str = preg_replace('/[úùûü]/ui', 'u', $str);
     $str = preg_replace('/[ç]/ui', 'c', $str);
     // $str = preg_replace('/[,(),;:|!"#$%&/=?~^><ªº-]/', '_', $str);
-    $str = preg_replace('/[^a-z0-9]/i', '_', $str);
-    $str = preg_replace('/_+/', '_', $str);
+    $str = preg_replace('/[^a-z0-9]/i', '-', $str);
+    $str = preg_replace('/_+/', '-', $str);
 
     return $str;
 }
