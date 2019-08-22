@@ -8,7 +8,7 @@
 //ini_set('display_errors', 1);
 //ini_set('display_startup_erros', 1);
 //error_reporting(E_ALL);
-include_once 'app/lib/funcdate.php';
+
 class ProcessoForm extends TPage
 {
 
@@ -35,7 +35,7 @@ class ProcessoForm extends TPage
         $numero = new TEntry('numero');
         $origem = new TEntry('origem');
         $autor = new TEntry('autor');
-        $descricao = new TText('descricao');
+        $descricao = new THtmlEditor('descricao');
         $situacao = new TCombo('situacao');
 
 
